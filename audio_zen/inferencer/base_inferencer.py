@@ -20,17 +20,19 @@ class BaseInferencer:
         root_dir = Path(output_dir).expanduser().absolute()
         self.device = prepare_device(torch.cuda.device_count())
 
-        print("Loading inference dataset...")
-        self.dataloader = self._load_dataloader(config["dataset"])
+        #print("Loading inference dataset...")
+        #self.dataloader = self._load_dataloader(config["dataset"])
         print("Loading model...")
         self.model, epoch = self._load_model(config["model"], checkpoint_path, self.device)
         self.inference_config = config["inferencer"]
 
-        self.enhanced_dir = root_dir / f"enhanced_{str(epoch).zfill(4)}"
+        #self.enhanced_dir = root_dir / f"enhanced_{str(epoch).zfill(4)}"
+        self.enhanced_dir = root_dir
         self.noisy_dir = root_dir / f"noisy"
 
         # self.enhanced_dir = root_dir
-        prepare_empty_dir([self.noisy_dir, self.enhanced_dir])
+        #prepare_empty_dir([self.noisy_dir, self.enhanced_dir])
+        prepare_empty_dir([self.enhanced_dir])
 
         # Acoustics
         self.acoustic_config = config["acoustics"]
@@ -67,6 +69,7 @@ class BaseInferencer:
         #     toml.dump(config, handle)
 
         self.config = config
+
 
     @staticmethod
     def _load_dataloader(dataset_config):

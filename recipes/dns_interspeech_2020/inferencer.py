@@ -128,7 +128,7 @@ class Inferencer(BaseInferencer):
         return enhanced
 
     @torch.no_grad()
-    def full_band_crm_mask(self, noisy, inference_args):
+    def full_band_crm_mask(self, noisy):
         noisy_mag, _, noisy_real, noisy_imag = self.torch_stft(noisy)
 
         noisy_mag = noisy_mag.unsqueeze(1)

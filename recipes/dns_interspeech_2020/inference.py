@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 import toml
+import tomlkit
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 from audio_zen.utils import initialize_module
@@ -27,6 +28,14 @@ if __name__ == "__main__":
         required=True,
         help="The path of the model's checkpoint.",
     )
+
+    parser.add_argument(
+        "-I",
+        "--input",
+        type=str,
+        required=True,
+        help="Input audio file or a directory that contains audio files.",
+    )
     parser.add_argument(
         "-O",
         "--output_dir",
@@ -35,7 +44,7 @@ if __name__ == "__main__":
         help="The path for saving enhanced speeches.",
     )
     args = parser.parse_args()
-
+    input_path = args.input
     config_path = Path(args.configuration).expanduser().absolute()
     configuration = toml.load(config_path.as_posix())
 
@@ -46,4 +55,12 @@ if __name__ == "__main__":
     checkpoint_path = args.model_checkpoint_path
     output_dir = args.output_dir
 
+
+
+    # Modify the values of the arguments in the TOML file
+    configuration['dataset']['dataset_dir_list'] = [input_path]
+
+    print('changed toml')
+    # Print the modified TOML file
+    print(tomlkit.dumps(configuration))
     main(configuration, checkpoint_path, output_dir)
