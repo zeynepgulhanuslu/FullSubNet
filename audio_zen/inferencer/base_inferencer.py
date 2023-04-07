@@ -15,9 +15,15 @@ from audio_zen.utils import initialize_module, prepare_device, prepare_empty_dir
 
 
 class BaseInferencer:
-    def __init__(self, config, checkpoint_path, output_dir):
+    def __init__(self, config, checkpoint_path, output_dir = None):
         checkpoint_path = Path(checkpoint_path).expanduser().absolute()
-        root_dir = Path(output_dir).expanduser().absolute()
+        if output_dir is not None:
+            root_dir = Path(output_dir).expanduser().absolute()
+            # self.enhanced_dir = root_dir / f"enhanced_{str(epoch).zfill(4)}"
+            self.enhanced_dir = root_dir
+            prepare_empty_dir([self.enhanced_dir])
+
+
         self.device = prepare_device(torch.cuda.device_count())
 
         #print("Loading inference dataset...")
@@ -26,13 +32,6 @@ class BaseInferencer:
         self.model, epoch = self._load_model(config["model"], checkpoint_path, self.device)
         self.inference_config = config["inferencer"]
 
-        #self.enhanced_dir = root_dir / f"enhanced_{str(epoch).zfill(4)}"
-        self.enhanced_dir = root_dir
-        self.noisy_dir = root_dir / f"noisy"
-
-        # self.enhanced_dir = root_dir
-        #prepare_empty_dir([self.noisy_dir, self.enhanced_dir])
-        prepare_empty_dir([self.enhanced_dir])
 
         # Acoustics
         self.acoustic_config = config["acoustics"]

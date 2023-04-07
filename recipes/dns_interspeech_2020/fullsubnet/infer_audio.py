@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     configuration = toml.load(config_path.as_posix())
 
-    inferencer = Inferencer(configuration, checkpoint_path, output_dir)
+    inferencer = Inferencer(configuration, checkpoint_path, None)
     print(inferencer.config)
     if not os.path.exists(output_dir):
             os.mkdir(output_dir)
